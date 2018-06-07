@@ -36,6 +36,11 @@ class BaseTable():
         self._engine.execute(self.connect.insert(), document)
 
     def remove(self, condition: dict = None):
+        '''
+            remove records that mach condition
+        :param condition: if it's None, remove all record
+        :return: None
+        '''
         if condition is None:
             d = self.connect.delete()
         else:
