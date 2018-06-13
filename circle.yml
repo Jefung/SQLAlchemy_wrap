@@ -9,10 +9,13 @@ jobs:
       - image: circleci/mysql:latest
         command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin
         environment:
-          MYSQL_HOST: 127.0.0.1
-          MYSQL_USER: unittest
-          MYSQL_PASSWORD: unittest
-          MYSQL_ALLOW_EMPTY_PASSWORD: true
+        environment:
+          - MYSQL_PASSWORD=unittest
+          - MYSQL_DATABASE=unittest
+          - MYSQL_ROOT_HOST=%
+          - DB_HOST=127.0.0.1
+          - DB_PORT=3306
+
 
     working_directory: ~/repo
 
