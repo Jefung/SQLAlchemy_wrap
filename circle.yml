@@ -6,15 +6,19 @@ jobs:
   build:
     docker:
       - image: circleci/python:3.6
-      - image: circleci/mysql:latest
-        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin
         environment:
-        environment:
-          - MYSQL_PASSWORD=unittest
-          - MYSQL_DATABASE=unittest
+          - MYSQL_PASSWORD='test_pw'
+          - MYSQL_DATABASE='test_db'
+          - MYSQL_ROOT_HOST=%
           - DB_HOST=127.0.0.1
           - DB_PORT=3306
-
+      - image: mysql:5.7
+        environment:
+          - MYSQL_PASSWORD=test_pw
+          - MYSQL_DATABASE=loans
+          - MYSQL_ROOT_HOST=%
+          - DB_HOST=127.0.0.1
+          - DB_PORT=3306
 
     working_directory: ~/repo
 
