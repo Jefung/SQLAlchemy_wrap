@@ -1,6 +1,7 @@
 import unittest
-from sql_factory import MysqlFactory
+
 from exceptions import DbNotConnect
+from sql_factory import MysqlFactory
 
 
 class TestIProject(unittest.TestCase):
@@ -24,20 +25,18 @@ class TestIProject(unittest.TestCase):
         self.assertRaises(DbNotConnect, db_factory.db, self.db_name)
 
     def test_db_conect(self):
-
         db_factory = MysqlFactory()
         self.assertRaises(DbNotConnect, db_factory.db, self.db_name)
 
-        sql_url = 'mysql+pymysql://{0}:{1}@{2}/{3}'.format(self.username,self.password,"localhost",self.db_name)
-        db_factory.connect(self.db_name,sql_url)
-        self.assertIsInstance(db_factory.db(self.db_name),MysqlFactory)
+        sql_url = 'mysql+pymysql://{0}:{1}@{2}/{3}'.format(self.username, self.password, "localhost", self.db_name)
+        db_factory.connect(self.db_name, sql_url)
+        self.assertIsInstance(db_factory.db(self.db_name), MysqlFactory)
 
         # close db connection
         db_factory.db(self.db_name).close()
         self.assertRaises(DbNotConnect, db_factory.db, self.db_name)
 
-        self.assertIsInstance(db_factory.db(self.db_name,self.username,self.password), MysqlFactory)
-
+        self.assertIsInstance(db_factory.db(self.db_name, self.username, self.password), MysqlFactory)
 
     def test_base_table_class(self):
         db_factory = MysqlFactory("not_this_path")
