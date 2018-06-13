@@ -1,0 +1,58 @@
+# Python CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-python/ for more details
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.6
+#        environment:
+#          - MYSQL_PASSWORD='unittest'
+#          - MYSQL_DATABASE='unittest'
+#          - MYSQL_ROOT_HOST=%
+#          - DB_HOST=127.0.0.1
+#          - DB_PORT=3306
+      - image: mysql:5.7
+        environment:
+          - MYSQL_ALLOW_EMPTY_PASSWORD=true
+          - MYSQL_USER=unittest
+          - MYSQL_PASSWORD=unittest
+          - MYSQL_DATABASE=unittest
+          - MYSQL_ROOT_HOST=%
+          - DB_HOST=127.0.0.1
+          - DB_PORT=3306
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "requirements.txt" }}
+          - v1-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            # install PySide
+            pip install -r requirements.txt
+            pip install pytest pycodestyle
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
+
+      - run:
+          name: run tests
+          command: |
+            . venv/bin/activate
+            python -m pycodestyle . --max-line-length=120 --exclude=./venv
+            python -m pytest
+
+      - store_artifacts:
+          path: test-reports
+          destination: test-reports
