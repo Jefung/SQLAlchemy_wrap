@@ -12,7 +12,6 @@ jobs:
         environment:
           - MYSQL_PASSWORD=unittest
           - MYSQL_DATABASE=unittest
-          - MYSQL_ROOT_HOST=%
           - DB_HOST=127.0.0.1
           - DB_PORT=3306
 
