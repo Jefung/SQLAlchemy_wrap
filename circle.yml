@@ -6,12 +6,12 @@ jobs:
   build:
     docker:
       - image: circleci/python:3.6
-        environment:
-          - MYSQL_PASSWORD='unittest'
-          - MYSQL_DATABASE='unittest'
-          - MYSQL_ROOT_HOST=%
-          - DB_HOST=127.0.0.1
-          - DB_PORT=3306
+#        environment:
+#          - MYSQL_PASSWORD='unittest'
+#          - MYSQL_DATABASE='unittest'
+#          - MYSQL_ROOT_HOST=%
+#          - DB_HOST=127.0.0.1
+#          - DB_PORT=3306
       - image: mysql:5.7
         environment:
           - MYSQL_ALLOW_EMPTY_PASSWORD=true
