@@ -6,8 +6,8 @@ from sql_factory import MysqlFactory
 
 class TestIProject(unittest.TestCase):
     db_name = "unittest"
-    username = "root"
-    password = "jefung"
+    username = "unittest"
+    password = "unittest"
 
     def test_operator_table_class(self):
         db_factory = MysqlFactory("tests.table_class")

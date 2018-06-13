@@ -6,6 +6,13 @@ jobs:
   build:
     docker:
       - image: circleci/python:3.6
+      - image: circleci/mysql:latest
+        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --innodb-large-prefix=true --innodb-file-format=Barracuda
+        environment:
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_USER: unittest
+          MYSQL_PASSWORD: unittest
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
 
     working_directory: ~/repo
 
