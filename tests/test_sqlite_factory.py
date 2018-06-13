@@ -30,7 +30,7 @@ class TestSqliteFactory(unittest.TestCase):
             os.remove(self.db_temp_file)
 
     def test_user_table_class(self):
-        db_factory = SqliteFactory("table_class")
+        db_factory = SqliteFactory("tests.table_class")
 
         t = db_factory.db(self.db_name, self.db_temp_file).table("unittest_table")
 
