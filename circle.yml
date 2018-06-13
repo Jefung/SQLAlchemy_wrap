@@ -9,12 +9,12 @@ jobs:
         environment:
           - MYSQL_PASSWORD='test_pw'
           - MYSQL_DATABASE='test_db'
-          - MYSQL_ALLOW_EMPTY_PASSWORD = true
           - MYSQL_ROOT_HOST=%
           - DB_HOST=127.0.0.1
           - DB_PORT=3306
       - image: mysql:5.7
         environment:
+          - MYSQL_ALLOW_EMPTY_PASSWORD=true
           - MYSQL_PASSWORD=test_pw
           - MYSQL_DATABASE=loans
           - MYSQL_ROOT_HOST=%
