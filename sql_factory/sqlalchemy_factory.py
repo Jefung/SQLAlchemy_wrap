@@ -14,7 +14,7 @@ class SqlalchemyFactory(IDbFactory):
     _cur_db_name = None
     _cur_col = None
     _db_dir = None
-    _engine = None
+    engine = None
 
     def __init__(self, db_dir: str = None):
         '''
@@ -29,8 +29,8 @@ class SqlalchemyFactory(IDbFactory):
         """
             add a database connection, it will not set the instance's current db connect
         """
-        self._engine = create_engine(*args, **kw)
-        self._dbs[db_name] = self._engine.connect()
+        self.engine = create_engine(*args, **kw)
+        self._dbs[db_name] = self.engine.connect()
         self._tables[db_name] = {}
         self._cur_db = self._dbs[db_name]
         self._cur_db_name = db_name
@@ -48,9 +48,9 @@ class SqlalchemyFactory(IDbFactory):
         else:
             raise DbNotConnect("database '" + db_name + "' is not connect, you can use connect() to connect db")
 
-        # attempt to connect  database
-        # self.connect(database_name, *args, **kw)
-        # return self
+            # attempt to connect  database
+            # self.connect(database_name, *args, **kw)
+            # return self
 
     def table(self, table_name: str):
         table_name = table_name.lower()
@@ -73,12 +73,15 @@ class SqlalchemyFactory(IDbFactory):
             else:
                 __import__(self._db_dir + "." + db_name)
 
-            m = __import__(self._db_dir, fromlist=[table_name])
+            m = __import__(self._db_dir + "." + db_name, fromlist=[table_name])
             for attr_name in dir(m):
-                if table_name.lower() == attr_name.lower() and issubclass(getattr(m, attr_name), BaseTable):
-                    table_name = attr_name
+                if table_name.lower() == attr_name.lower():
+                    if type(getattr(m, attr_name)) == type and \
+                            issubclass(getattr(m, attr_name), BaseTable):
+                        table_name = attr_name
+                        break
             cls = getattr(m, table_name)
-            return cls(self._cur_db, is_base_table=True)
+            return cls(self._cur_db, is_base_table=False)
         except Exception as e:
             base_table = BaseTable(self._cur_db, saved_table_name)
             return base_table
@@ -95,6 +98,7 @@ class SqlalchemyFactory(IDbFactory):
             self._dbs.pop(self._cur_db_name)
             self._tables.pop(self._cur_db_name)
             self._cur_db_name = None
+            self._cur_col = None
 
     def exec(self, *args, **kw) -> sqlalchemy.engine.result.ResultProxy:
         """
@@ -103,7 +107,7 @@ class SqlalchemyFactory(IDbFactory):
         return self._cur_db.execute(*args, **kw)
 
     def get_engine(self):
-        return self._engine
+        return self.engine
 
     def __del__(self):
         self._dbs.clear()
