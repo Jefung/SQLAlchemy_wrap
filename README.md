@@ -1,5 +1,5 @@
 # SQLAlchemy_wrap
-* 对![SQLAlchemy](https://docs.sqlalchemy.org/en/latest/)的封装,支持查找指定文件夹中的数据库操作类(暂时只考虑单表操作)
+* 对[SQLAlchemy](https://docs.sqlalchemy.org/en/latest/)的封装,支持查找指定文件夹中的数据库操作类(暂时只考虑单表操作)
 * 使用自定义基类直接操作数据库,基类包含基础的增删查改的方法
 * 可以直接使用已有库,也可以在继承类中使用建库语法进行建库并对应操作
 
