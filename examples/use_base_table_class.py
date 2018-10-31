@@ -1,3 +1,4 @@
+# 使用基类操作数据库. ps:基类包含自己个人比较喜欢的方法
 from sql_factory import SqliteFactory
 
 # Notice:
