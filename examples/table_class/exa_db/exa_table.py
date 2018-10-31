@@ -10,7 +10,7 @@ class ExaTable(BaseTable):
                                   Column('id', Integer, primary_key=True),
                                   Column('name', String(50)),
                                   )
-            metadata.create_all(self._engine)
+            metadata.create_all(self.engine)
             self.connect = table_connect
         except BaseException as e:  # pragma: no cover
             print("Create table 'table' failed: " + e.__str__())

@@ -4,7 +4,7 @@ from exceptions import DbNotConnect
 from sql_factory import MysqlFactory
 
 
-class TestIProject(unittest.TestCase):
+class TestMysqlFactory(unittest.TestCase):
     db_name = "unittest"
     username = "unittest"
     password = "unittest"

@@ -6,6 +6,7 @@ jobs:
   build:
     docker:
       - image: circleci/python:3.6
+<<<<<<< HEAD
 #        environment:
 #          - MYSQL_PASSWORD='unittest'
 #          - MYSQL_DATABASE='unittest'
@@ -21,6 +22,12 @@ jobs:
           - MYSQL_ROOT_HOST=%
           - DB_HOST=127.0.0.1
           - DB_PORT=3306
+=======
+        environment:
+          MYSQL_ROOT_HOST: 127.0.0.1
+          MYSQL_ROOT_PASSWORD: password
+
+>>>>>>> bf2487ec4b7f49c2979ce8717cb5040d1249c54d
 
     working_directory: ~/repo
 
@@ -40,6 +47,33 @@ jobs:
             # install PySide
             pip install -r requirements.txt
             pip install pytest pycodestyle
+<<<<<<< HEAD
+=======
+            sudo apt-get install mysql-client
+            sudo apt-get -y install mysql-server
+
+#      - run:
+#          name: Fix MySQL socket config
+#          command: |
+#            sudo sh -c "echo 'pdo_mysql.default_socket=/var/run/mysqld/mysqld.sock' > /usr/local/etc/php/conf.d/pdo.ini"
+
+      - run:
+          name: Start database server
+          command: |
+            sudo service mysql start
+            sleep 2
+            ps aux | grep mysql
+
+      - run:
+          name: Create non-admin user and create db 'unittest'
+          command: |
+            sudo mysql -u root -e "CREATE user unittest IDENTIFIED BY 'unittest';"
+            sudo mysql -u root -e "CREATE DATABASE IF NOT EXISTS unittest;"
+            sudo mysql -u root -e "GRANT ALL PRIVILEGES ON unittest.* TO 'unittest'@'localhost' IDENTIFIED BY 'unittest';"
+            sudo mysql -u root -e "create table if not exists unittest.unittest_table ( \
+                          id int(11) not null AUTO_INCREMENT, \
+                          name varchar(50) default null, PRIMARY KEY (id) );"
+>>>>>>> bf2487ec4b7f49c2979ce8717cb5040d1249c54d
 
       - save_cache:
           paths:
