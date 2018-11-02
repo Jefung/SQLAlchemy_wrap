@@ -3,13 +3,6 @@ from sql_factory import SqlalchemyFactory
 
 class SqliteFactory(SqlalchemyFactory):
 
-    # def db_connect(self, db_name, db_file, *args, **kw):
-    #     # sqlite://<nohostname>/<path>
-    #     sql_url = "sqlite:///" + db_file
-    #     print(sql_url)
-    #     super().connect(db_name, sql_url, *args, **kw)
-
-
     def db(self, db_name, db_file=None, *args, **kw):
         if db_file is not None:
             # sqlite://<nohostname>/<path>
