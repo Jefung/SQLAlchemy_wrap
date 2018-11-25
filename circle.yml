@@ -118,7 +118,7 @@ workflows:
   version: 2
   build_and_deploy:
     jobs:
-      - build
+      - build:
           filters:
             tags:
               only: /.*/
@@ -128,5 +128,5 @@ workflows:
           filters:
             tags:
               only: /[0-9]+(\.[0-9]+)*/
-#            branches:
-#              ignore: /.*/
+            branches:
+              ignore: /.*/
