@@ -23,7 +23,7 @@ jobs:
 #          CIRCLE_TAG: 2.0.1
 
 #    working_directory: ~/repo
-#    executor: workspace_1
+    executor: default
     steps:
       - checkout
       - restore_cache:
@@ -73,8 +73,8 @@ jobs:
           destination: test-reports
 
   deploy:
-  
-#    executor: workspace_1
+
+    executor: default
 #    docker:
 #      - image: circleci/python:3.6
 #        environment:
