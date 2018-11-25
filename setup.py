@@ -35,13 +35,12 @@ class VerifyVersionCommand(install):
 
 
 setup(
-    name="circleci",
+    name="SQLAlchemy_wrap",
     version=VERSION,
     description="Python wrapper for the CircleCI API",
     long_description=readme(),
-    url="https://github.com/levlaz/circleci.py",
-    author="Lev Lazinskiy",
-    author_email="lev@levlaz.org",
+    author="jefung",
+    author_email="865424525@qq.com",
     license="MIT",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
