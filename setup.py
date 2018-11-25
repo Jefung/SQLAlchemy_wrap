@@ -16,7 +16,7 @@ VERSION = "1.1.1"
 
 def readme():
     """print long description"""
-    with open('README.md',encoding="utf-8") as f:
+    with open('README.md', encoding="utf-8") as f:
         return f.read()
 
 
