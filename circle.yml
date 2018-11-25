@@ -3,7 +3,7 @@
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 version: 2.1
 executors:
-  workspace_1:
+  default:
     docker:
       - image: circleci/python:3.6
         environment:
@@ -23,7 +23,7 @@ jobs:
 #          CIRCLE_TAG: 2.0.1
 
 #    working_directory: ~/repo
-    executor: workspace_1
+#    executor: workspace_1
     steps:
       - checkout
       - restore_cache:
@@ -73,7 +73,7 @@ jobs:
           destination: test-reports
 
   deploy:
-    executor: workspace_1
+#    executor: workspace_1
 #    docker:
 #      - image: circleci/python:3.6
 #        environment:
