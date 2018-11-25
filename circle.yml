@@ -72,7 +72,7 @@ jobs:
           path: test-reports
           destination: test-reports
       - persist_to_workspace:
-        root: ~/repo
+          root: ~/repo
 
 
   deploy:
