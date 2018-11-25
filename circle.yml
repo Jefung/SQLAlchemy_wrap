@@ -1,7 +1,23 @@
-# Python CircleCI 2.0 configuration file
+# Python CircleCI 2.1 configuration file
 #
 # Check https://circleci.com/docs/2.0/language-python/ for more details
-version: 2
+version: 2.0
+workflows:
+  build_and_deploy:
+    jobs:
+#      - build:
+#          filters:
+#            tags:
+#              only: /.*/
+      - deploy:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /[0-9]+(\.[0-9]+)*/
+#            branches:
+#              ignore: /.*/
+
 jobs:
   build:
     docker:
@@ -9,20 +25,13 @@ jobs:
         environment:
           MYSQL_ROOT_HOST: 127.0.0.1
           MYSQL_ROOT_PASSWORD: password
-
-
-    working_directory: ~/repo
-
+          CIRCLE_TAG: 2.0.1
     steps:
       - checkout
-
       - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "requirements.txt" }}
-          - v1-dependencies-
-
+          key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
       - run:
-          name: install dependencies
+          name: install python dependencies
           command: |
             python3 -m venv venv
             . venv/bin/activate
@@ -31,7 +40,11 @@ jobs:
             pip install pytest pycodestyle
             sudo apt-get install mysql-client
             sudo apt-get -y install mysql-server
-
+            pip install twine
+      - save_cache:
+          key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
+          paths:
+            - "venv"
       - run:
           name: Start database server
           command: |
@@ -49,18 +62,44 @@ jobs:
                           id int(11) not null AUTO_INCREMENT, \
                           name varchar(50) default null, PRIMARY KEY (id) );"
 
-      - save_cache:
-          paths:
-            - ./venv
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
-
       - run:
           name: run tests
           command: |
             . venv/bin/activate
             python -m pycodestyle . --max-line-length=120 --exclude=./venv
             python -m pytest
-
       - store_artifacts:
-          path: test-reports
-          destination: test-reports
+          path: htmlcov/
+
+  deploy:
+    docker:
+      - image: circleci/python:3.6
+        environment:
+          CIRCLE_TAG: 2.0.2
+
+    steps:
+      - run:
+          name: verify git tag vs. version
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            python setup.py verify
+
+      - run:
+          name: init .pypirc
+          command: |
+            echo -e "[pypi]" >> ~/.pypirc
+            echo -e "username = Jefung" >> ~/.pypirc
+            echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
+
+      - run:
+          name: create packages
+          command: |
+            python setup.py sdist
+            python setup.py bdist_wheel
+
+      - run:
+          name: upload to pypi
+          command: |
+            . venv/bin/activate
+            twine upload dist/*
