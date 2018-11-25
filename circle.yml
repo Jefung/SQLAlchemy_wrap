@@ -72,20 +72,20 @@ jobs:
             . venv/bin/activate
             python setup.py verify
 
-       - run:
+      - run:
           name: init .pypirc
           command: |
             echo -e "[pypi]" >> ~/.pypirc
             echo -e "username = levlaz" >> ~/.pypirc
             echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
 
-        - run:
+      - run:
           name: create packages
           command: |
             python setup.py sdist
             python setup.py bdist_wheel
 
-        - run:
+      - run:
           name: upload to pypi
           command: |
             . venv/bin/activate
