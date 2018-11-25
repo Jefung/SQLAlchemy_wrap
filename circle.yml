@@ -9,7 +9,7 @@ executors:
         environment:
           MYSQL_ROOT_HOST: 127.0.0.1
           MYSQL_ROOT_PASSWORD: password
-          CIRCLE_TAG: 2.0.1
+          CIRCLE_TAG: 2.0.2
     working_directory: ~/repo
 
 jobs:
