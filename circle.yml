@@ -29,7 +29,9 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
+          paths:
+            - ./venv
       - run:
           name: install python dependencies
           command: |
@@ -42,9 +44,9 @@ jobs:
             sudo apt-get -y install mysql-server
             pip install twine
       - save_cache:
-          key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
           paths:
-            - "venv"
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
       - run:
           name: Start database server
           command: |
@@ -69,7 +71,8 @@ jobs:
             python -m pycodestyle . --max-line-length=120 --exclude=./venv
             python -m pytest
       - store_artifacts:
-          path: htmlcov/
+          path: test-reports
+          destination: test-reports
 
   deploy:
     docker:
