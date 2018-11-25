@@ -2,18 +2,27 @@
 #
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 version: 2.0
-
-
-jobs:
-  build:
+executors:
+  workspace_1:
     docker:
       - image: circleci/python:3.6
         environment:
           MYSQL_ROOT_HOST: 127.0.0.1
           MYSQL_ROOT_PASSWORD: password
           CIRCLE_TAG: 2.0.1
-
     working_directory: ~/repo
+
+jobs:
+  executor: workspace_1
+  build:
+#    docker:
+#      - image: circleci/python:3.6
+#        environment:
+#          MYSQL_ROOT_HOST: 127.0.0.1
+#          MYSQL_ROOT_PASSWORD: password
+#          CIRCLE_TAG: 2.0.1
+
+#    working_directory: ~/repo
     steps:
       - checkout
       - restore_cache:
@@ -63,11 +72,12 @@ jobs:
           destination: test-reports
 
   deploy:
-    docker:
-      - image: circleci/python:3.6
-        environment:
-          CIRCLE_TAG: 2.0.2
-    working_directory: ~/repo
+    executor: workspace_1
+#    docker:
+#      - image: circleci/python:3.6
+#        environment:
+#          CIRCLE_TAG: 2.0.2
+#    working_directory: ~/repo
     steps:
       - run:
           name: verify git tag vs. version
