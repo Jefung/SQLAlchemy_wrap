@@ -67,6 +67,8 @@ jobs:
           path: test-reports
           destination: test-reports
 
+  deploy:
+    steps:
       - run:
           name: verify git tag vs. version
           command: |
