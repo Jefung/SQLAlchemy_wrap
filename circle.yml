@@ -13,7 +13,7 @@ executors:
     working_directory: ~/repo
 
 jobs:
-  executor: workspace_1
+
   build:
 #    docker:
 #      - image: circleci/python:3.6
@@ -23,6 +23,7 @@ jobs:
 #          CIRCLE_TAG: 2.0.1
 
 #    working_directory: ~/repo
+    executor: workspace_1
     steps:
       - checkout
       - restore_cache:
