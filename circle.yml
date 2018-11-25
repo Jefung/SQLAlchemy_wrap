@@ -2,21 +2,7 @@
 #
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 version: 2.0
-workflows:
-  build_and_deploy:
-    jobs:
-      - build:
-#          filters:
-#            tags:
-#              only: /.*/
-      - deploy:
-          requires:
-            - build
-          filters:
-            tags:
-              only: /[0-9]+(\.[0-9]+)*/
-#            branches:
-#              ignore: /.*/
+
 
 jobs:
   build:
@@ -106,3 +92,19 @@ jobs:
           command: |
             . venv/bin/activate
             twine upload dist/*
+
+workflows:
+  build_and_deploy:
+    jobs:
+      - build:
+#          filters:
+#            tags:
+#              only: /.*/
+      - deploy:
+          requires:
+            - build
+#          filters:
+#            tags:
+#              only: /[0-9]+(\.[0-9]+)*/
+#            branches:
+#              ignore: /.*/
