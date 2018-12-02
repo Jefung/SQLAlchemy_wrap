@@ -30,7 +30,7 @@ class BaseTable():
     def create_table_using_columns(self, *args):
         try:
             metadata = MetaData()
-            table_connect = Table('project', metadata, *args)
+            table_connect = Table(self._cur_table_name, metadata, *args)
             metadata.create_all(self.engine)
             self.connect = table_connect
         except BaseException as e:  # pragma: no cover
