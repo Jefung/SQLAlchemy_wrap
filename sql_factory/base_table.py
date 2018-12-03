@@ -4,80 +4,121 @@ from sqlalchemy import *
 
 
 class BaseTable():
-    engine = None
-    table_cmd = None
-    connect = None
+    __tablename__ = None
     table_columns = None
-    _cur_table_name = None
 
+    engine = None
+    metadata = None
+    connect = None
+
+    table_cmd = None
     is_base_table = False
 
-    def __init__(self, engine: create_engine, table_name=None, is_base_table=True):
+    def __init__(self, engine: create_engine, table_name=None):
+        if self.__tablename__ is None:
+            if table_name is not None:
+                self.__tablename__ = table_name
+            else:
+                self.__tablename__ = self.__class__.__name__
         self.engine = engine
-        self._cur_table_name = table_name if table_name is not None else self.__class__.__name__
-        self._cur_table_name = self._cur_table_name.lower()
-        self.is_base_table = is_base_table
+        self.metadata = MetaData(engine)
 
-        if self.table_columns is not None and self.connect is None:
+        # 不定义self.table_columns就从已有表加载
+        # 否则创建表(如果不存在)并加载
+        if self.table_columns is not None and len(self.table_columns) > 0:
             self.create_table_using_columns(*self.table_columns)
-
-        if self.connect is None:
-            self.create_table()
-
-        if self.connect is None:  # pragma: no cover
-            raise BaseException("you must assign table connection to self.connect")
+        else:
+            try:
+                self.connect = Table(self.__tablename__, self.metadata, autoload=True)
+                self.metadata.create_all()
+            except AttributeError as e:
+                raise Exception("database don't exists table `{}`: {}".format(self.__tablename__, str(e)))
 
     def create_table_using_columns(self, *args):
         try:
-            metadata = MetaData()
-            table_connect = Table(self._cur_table_name, metadata, *args)
-            metadata.create_all(self.engine)
-            self.connect = table_connect
+            self.connect = Table(self.__tablename__, self.metadata, *args)
+            self.metadata.create_all()
         except BaseException as e:  # pragma: no cover
-            print("Create table 'project' using columns failed: " + e.__str__())
-            return False
+            raise Exception("Create table `{}` failed: {}".format(self.__tablename__, str(e)))
 
-    def create_table(self):
-        metadata = MetaData(self.engine)
-        self.connect = Table(self._cur_table_name, metadata, autoload=True)
-
-    def update(self, condition, update_content):
+    def update(self, update_content, where_clause: str = None, **kwargs):
         stmt = self.connect.update().values(update_content)
-        for k in condition:
-            stmt = stmt.where(getattr(self.connect.c, k) == condition[k])
-        self.engine.execute(stmt)
+        if where_clause:
+            where_clause = text(where_clause)
+            print(where_clause)
+            if len(kwargs):
+                where_clause = where_clause.params(kwargs)
+            stmt = stmt.where(where_clause)
+        res = self.engine.execute(stmt)
+        return res.rowcount
 
     def insert(self, document: dict):
         if document == {}:
             return
         self.engine.execute(self.connect.insert(), document)
 
-    def remove(self, condition: dict = None):
+    def insert_one(self, row_data_dict: dict):
+        if isinstance(row_data_dict, dict):
+            if len(row_data_dict) == 0:
+                return
+            self.insert_multi([row_data_dict])
+        else:
+            raise Exception("insert_one() parameter 1 must be dict")
+
+    def insert_multi(self, rows_data_list: list):
+        if isinstance(rows_data_list, list):
+            if len(rows_data_list) == 0:
+                return
+            self.engine.execute(self.connect.insert(), rows_data_list)
+
+        else:
+            raise Exception("insert_multi() parameter 1 must be list")
+
+    def exec_sql(self, sql, **kwargs):
+        sql = text(sql)
+        if len(kwargs) > 0:
+            sql = sql.bindparams(kwargs)
+        return self.engine.execute(sql)
+
+    def remove(self, where_clause: str = None, **kwargs) -> int:
         '''
             remove records that mach condition
         :param condition: if it's None, remove all record
         :return: None
         '''
-        if condition is None:
-            d = self.connect.delete()
-        else:
-            d = self.connect.delete()
-            for k in condition:
-                d = d.where(getattr(self.connect.c, k) == condition[k])
-        self.engine.execute(d)
+        # if condition is None:
+        #     d = self.connect.delete()
+        # else:
+        #     d = self.connect.delete()
+        #     for k in condition:
+        #         d = d.where(getattr(self.connect.c, k) == condition[k])
+        # self.engine.execute(d)
+        from sqlalchemy import delete
+        stmt = delete(self.connect)
+        if where_clause:
+            stmt = stmt.where(text(where_clause))
+            if len(kwargs) > 0:
+                stmt.params(kwargs)
+        res = self.engine.execute(stmt)
+        return res.rowcount
 
-    def get(self, condition=None) -> typing.List[dict]:
-        if condition is None:
-            s = select([self.connect])
-        else:
-            s = select([self.connect])
-            for k in condition:
-                s = s.where(getattr(self.connect.c, k) == condition[k])
-        res = self.engine.execute(s).fetchall()
+    def get(self, where_clause: str = None, **kwargs) -> typing.List[dict]:
+        stmt = select([self.connect])
+        if where_clause:
+            stmt = stmt.where(text(where_clause))
+            if len(kwargs):
+                stmt.params(kwargs)
+        res = self.engine.execute(stmt).fetchall()
         return self.sql_res_to_list_dict(res)
 
     def count(self) -> int:
-        return self.engine.execute(select([func.count()]).select_from(self.connect)).fetchone()[0]
+        return \
+            self.engine.execute(
+                select(
+                    [func.count()]
+                ).select_from(
+                    self.connect)
+            ).fetchone()[0]
 
     def get_all(self) -> typing.List[dict]:
         return self.get()
@@ -102,6 +143,5 @@ class BaseTable():
         else:
             return []
 
-    # def __del__(self):
-    #     self.table_columns.clear()
-    #     self.table_columns = []
+    def close(self):
+        self.connect.close()

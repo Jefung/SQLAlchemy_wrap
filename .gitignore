@@ -3,3 +3,6 @@
 
 # py cache
 __pycache__
+
+dist
+circleci.*
