@@ -9,7 +9,7 @@ executors:
         environment:
           MYSQL_ROOT_HOST: 127.0.0.1
           MYSQL_ROOT_PASSWORD: password
-          CIRCLE_TAG: 2.0.2
+          CIRCLE_TAG: 2.1.0
     working_directory: ~/repo
 
 jobs:
@@ -80,11 +80,6 @@ jobs:
   deploy:
 
     executor: default
-#    docker:
-#      - image: circleci/python:3.6
-#        environment:
-#          CIRCLE_TAG: 2.0.2
-#    working_directory: ~/repo
     steps:
       - attach_workspace:
           at: ~/repo
