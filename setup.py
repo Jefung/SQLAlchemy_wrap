@@ -11,14 +11,17 @@ from setuptools.command.install import install
 import subprocess
 
 # 要部署, 必须设置当前分支的git tag和VERSION一样.
-VERSION = "2.1.1"
+VERSION = "2.1.3"
 
 
 # 流程:
-# 1. 增加tag: git tag -a [版本号]
+# 1. 增加tag: git tag -a [版本号] -m "说明文字"
 # 2. 修改VENSION: VERSION = [版本号]
-# 3. 提交tag: git push origin --tags   // origin可修改为你的其它分支
+# 3. git提交: git add setup.py && git commit -m "upload pypi"
+# 3. 提交tag: git push origin --follow-tags   // origin可修改为你的其它分支
 
+# todo: 待测试
+# todo: 写脚本!!!!
 def get_git_latest_tag():
     def _minimal_ext_cmd(cmd: str):
         # construct minimal environment
