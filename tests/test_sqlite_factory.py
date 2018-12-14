@@ -20,7 +20,6 @@ class TestSqliteFactory(unittest.TestCase):
         self.t.remove()
         self.db_factory.close()
         self.db_factory = None
-        import time
 
     def test_connect_db(self):
         db_factory = SqliteFactory()

@@ -4,20 +4,8 @@ from sql_factory.base_table import BaseTable
 
 
 class UnittestTable(BaseTable):
-    # def create_table(self):
-    #     try:
-    #         metadata = MetaData()
-    #         table_connect = Table('unittest_table', metadata,
-    #                               Column('id', Integer, primary_key=True),
-    #                               Column('name', String(50)),
-    #                               )
-    #         metadata.create_all(self.engine)
-    #         self.connect = table_connect
-    #     except BaseException as e:  # pragma: no cover
-    #         print("Create table 'table' failed: " + e.__str__())
-    #         return False
     table_columns = [
-        Column('id', Integer, primary_key=True,autoincrement=True),
+        Column('id', Integer, primary_key=True, autoincrement=True),
         Column('name', String(50)),
         Column('obj', String)
     ]
