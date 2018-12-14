@@ -6,15 +6,21 @@
 """
 import os
 import sys
-
 from setuptools import setup
 from setuptools.command.install import install
 import subprocess
-# circleci.py version
+
+# 要部署, 必须设置当前分支的git tag和VERSION一样.
 VERSION = "2.1.1"
 
+
+# 流程:
+# 1. 增加tag: git tag -a [版本号]
+# 2. 修改VENSION: VERSION = [版本号]
+# 3. 提交tag: git push origin --tags   // origin可修改为你的其它分支
+
 def get_git_latest_tag():
-    def _minimal_ext_cmd(cmd : str):
+    def _minimal_ext_cmd(cmd: str):
         # construct minimal environment
         env = {}
         for k in ['SYSTEMROOT', 'PATH']:
@@ -25,7 +31,7 @@ def get_git_latest_tag():
         env['LANGUAGE'] = 'C'
         env['LANG'] = 'C'
         env['LC_ALL'] = 'C'
-        out = subprocess.Popen(cmd.split(" "), stdout = subprocess.PIPE, env=env).communicate()[0]
+        out = subprocess.Popen(cmd.split(" "), stdout=subprocess.PIPE, env=env).communicate()[0]
         return out
 
     try:
@@ -35,6 +41,7 @@ def get_git_latest_tag():
         git_tag = "Unknown"
 
     return git_tag
+
 
 def readme():
     """读取README.md文件"""
@@ -49,8 +56,9 @@ class VerifyVersionCommand(install):
     def run(self):
         git_latest_tag = get_git_latest_tag()
         if git_latest_tag != VERSION:
-            info = "Git tag: {0} does not match the version of this project: {1}".format( git_latest_tag, VERSION)
+            info = "Git tag: {0} does not match the version of this project: {1}".format(git_latest_tag, VERSION)
             sys.exit(info)
+
 
 setup(
     name="SQLAlchemy_wrap",
