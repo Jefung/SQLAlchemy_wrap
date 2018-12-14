@@ -9,30 +9,48 @@ import sys
 
 from setuptools import setup
 from setuptools.command.install import install
-
+import subprocess
 # circleci.py version
-VERSION = "2.1.0"
+VERSION = "2.1.1"
 
+def get_git_latest_tag():
+    def _minimal_ext_cmd(cmd : str):
+        # construct minimal environment
+        env = {}
+        for k in ['SYSTEMROOT', 'PATH']:
+            v = os.environ.get(k)
+            if v is not None:
+                env[k] = v
+        # LANGUAGE is used on win32
+        env['LANGUAGE'] = 'C'
+        env['LANG'] = 'C'
+        env['LC_ALL'] = 'C'
+        out = subprocess.Popen(cmd.split(" "), stdout = subprocess.PIPE, env=env).communicate()[0]
+        return out
+
+    try:
+        out = _minimal_ext_cmd("git describe --abbrev=0 --tags")
+        git_tag = out.strip().decode('ascii')
+    except OSError:
+        git_tag = "Unknown"
+
+    return git_tag
 
 def readme():
-    """print long description"""
+    """读取README.md文件"""
     with open('README.md', encoding="utf-8") as f:
         return f.read()
 
 
 class VerifyVersionCommand(install):
-    """Custom command to verify that the git tag matches our version"""
+    """确定当前分支的最新tag是否和VERSION变量一致,不一致则报错"""
     description = 'verify that the git tag matches our version'
 
     def run(self):
-        tag = os.getenv('CIRCLE_TAG')
-
-        if tag != VERSION:
-            info = "Git tag: {0} does not match the version of this app: {1}".format(
-                tag, VERSION
-            )
+        git_latest_tag = get_git_latest_tag()
+        if git_latest_tag != VERSION:
+            info = "Git tag: {0} does not match the version of this project: {1}".format( git_latest_tag, VERSION)
             sys.exit(info)
-
 
 setup(
     name="SQLAlchemy_wrap",
