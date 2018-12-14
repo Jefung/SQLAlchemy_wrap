@@ -14,6 +14,10 @@ class BaseTable():
     table_cmd = None
     is_base_table = False
 
+    @property
+    def c(self):
+        return self.connect.c
+
     def __init__(self, engine: create_engine, table_name=None):
         if self.__tablename__ is None:
             if table_name is not None:
