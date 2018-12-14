@@ -17,7 +17,7 @@ class UnittestTable(BaseTable):
     #         print("Create table 'table' failed: " + e.__str__())
     #         return False
     table_columns = [
-        Column('id', Integer, primary_key=True),
+        Column('id', Integer, primary_key=True,autoincrement=True),
         Column('name', String(50)),
         Column('obj', String)
     ]
