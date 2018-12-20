@@ -20,8 +20,6 @@ VERSION = "2.1.5"
 # 3. git提交: git add setup.py && git commit -m "upload pypi"
 # 3. 提交tag: git push origin --follow-tags   // origin可修改为你的其它分支
 
-# todo: 待测试
-# todo: 写脚本!!!!
 def get_git_latest_tag():
     def _minimal_ext_cmd(cmd: str):
         # construct minimal environment
@@ -71,6 +69,7 @@ setup(
     author="Jefung",
     author_email="865424525@qq.com",
     license="MIT",
+    url = "https://github.com/Jefung/SQLAlchemy_wrap",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
@@ -81,8 +80,6 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Internet",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3 :: Only",
     ],
     keywords='circleci ci cd api sdk',
     packages=[],
