@@ -1,5 +1,5 @@
 # 在指定文件夹下寻找数据库操作类, 其操作类必须继承基类
-from sql_factory import SqliteFactory
+from SQLAlchemy_wrap.sql_factory import SqliteFactory
 
 # Notice:
 # this example need to you create table in your operator class

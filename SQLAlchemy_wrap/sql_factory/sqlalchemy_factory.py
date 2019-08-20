@@ -1,8 +1,8 @@
 import sqlalchemy
 from sqlalchemy import create_engine
 
-from exceptions import DbNotConnect
-from interfaces import IDbFactory
+from SQLAlchemy_wrap.exceptions import DbNotConnect
+from SQLAlchemy_wrap.interfaces import IDbFactory
 from .base_table import BaseTable
 
 

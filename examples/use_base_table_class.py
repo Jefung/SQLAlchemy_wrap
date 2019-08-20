@@ -1,5 +1,5 @@
 # 使用基类操作数据库. ps:基类包含自己个人比较喜欢的方法
-from sql_factory import SqliteFactory
+from SQLAlchemy_wrap.sql_factory import SqliteFactory
 
 # Notice:
 # this example need to you has know database and table.
@@ -8,7 +8,7 @@ from sql_factory import SqliteFactory
 #   | name | string|
 
 # Known to sqlite3 database file path
-db_file_path = r"C:\Users\Administrator\AppData\Local\Temp\exa_db_name"
+db_file_path = r"exa_db_name.sqlite"
 db_name = "exa_db_name"
 table_name = "unittest_table"
 

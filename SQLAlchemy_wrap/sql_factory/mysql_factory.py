@@ -1,4 +1,4 @@
-from sql_factory import SqlalchemyFactory
+from SQLAlchemy_wrap.sql_factory import SqlalchemyFactory
 
 
 class MysqlFactory(SqlalchemyFactory):
