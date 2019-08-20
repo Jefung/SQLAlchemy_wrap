@@ -44,22 +44,22 @@ jobs:
           paths:
             - ./venv
           key: v1-dependencies-{{ checksum "requirements.txt" }}
-      - run:
-          name: Start database server
-          command: |
-            sudo service mysql start
-            sleep 2
-            ps aux | grep mysql
-
-      - run:
-          name: Create non-admin user and create db 'unittest'
-          command: |
-            sudo mysql -u root -e "CREATE user unittest IDENTIFIED BY 'unittest';"
-            sudo mysql -u root -e "CREATE DATABASE IF NOT EXISTS unittest;"
-            sudo mysql -u root -e "GRANT ALL PRIVILEGES ON unittest.* TO 'unittest'@'localhost' IDENTIFIED BY 'unittest';"
-            sudo mysql -u root -e "create table if not exists unittest.unittest_table ( \
-                          id int(11) not null AUTO_INCREMENT, \
-                          name varchar(50) default null, PRIMARY KEY (id) );"
+#      - run:
+#          name: Start database server
+#          command: |
+#            sudo service mysql start
+#            sleep 2
+#            ps aux | grep mysql
+#
+#      - run:
+#          name: Create non-admin user and create db 'unittest'
+#          command: |
+#            sudo mysql -u root -e "CREATE user unittest IDENTIFIED BY 'unittest';"
+#            sudo mysql -u root -e "CREATE DATABASE IF NOT EXISTS unittest;"
+#            sudo mysql -u root -e "GRANT ALL PRIVILEGES ON unittest.* TO 'unittest'@'localhost' IDENTIFIED BY 'unittest';"
+#            sudo mysql -u root -e "create table if not exists unittest.unittest_table ( \
+#                          id int(11) not null AUTO_INCREMENT, \
+#                          name varchar(50) default null, PRIMARY KEY (id) );"
 
       - run:
           name: run tests
