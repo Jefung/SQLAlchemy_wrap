@@ -37,8 +37,8 @@ jobs:
             # install PySide
             pip install -r requirements.txt
             pip install pytest pycodestyle
-            sudo apt-get install mysql-client
-            sudo apt-get -y install mysql-server
+#            sudo apt-get install mysql-client
+#            sudo apt-get -y install mysql-server
             pip install twine
       - save_cache:
           paths:
