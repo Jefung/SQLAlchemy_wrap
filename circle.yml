@@ -14,14 +14,14 @@ executors:
 jobs:
 
   build:
-#    docker:
-#      - image: circleci/python:3.6
-#        environment:
-#          MYSQL_ROOT_HOST: 127.0.0.1
-#          MYSQL_ROOT_PASSWORD: password
-#          CIRCLE_TAG: 2.0.1
+    #    docker:
+    #      - image: circleci/python:3.6
+    #        environment:
+    #          MYSQL_ROOT_HOST: 127.0.0.1
+    #          MYSQL_ROOT_PASSWORD: password
+    #          CIRCLE_TAG: 2.0.1
 
-#    working_directory: ~/repo
+    #    working_directory: ~/repo
     executor: default
     steps:
       - checkout
@@ -34,32 +34,13 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            # install PySide
             pip install -r requirements.txt
             pip install pytest pycodestyle
-#            sudo apt-get install mysql-client
-#            sudo apt-get -y install mysql-server
             pip install twine
       - save_cache:
           paths:
             - ./venv
           key: v1-dependencies-{{ checksum "requirements.txt" }}
-#      - run:
-#          name: Start database server
-#          command: |
-#            sudo service mysql start
-#            sleep 2
-#            ps aux | grep mysql
-#
-#      - run:
-#          name: Create non-admin user and create db 'unittest'
-#          command: |
-#            sudo mysql -u root -e "CREATE user unittest IDENTIFIED BY 'unittest';"
-#            sudo mysql -u root -e "CREATE DATABASE IF NOT EXISTS unittest;"
-#            sudo mysql -u root -e "GRANT ALL PRIVILEGES ON unittest.* TO 'unittest'@'localhost' IDENTIFIED BY 'unittest';"
-#            sudo mysql -u root -e "create table if not exists unittest.unittest_table ( \
-#                          id int(11) not null AUTO_INCREMENT, \
-#                          name varchar(50) default null, PRIMARY KEY (id) );"
 
       - run:
           name: run tests

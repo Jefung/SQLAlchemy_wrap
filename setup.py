@@ -6,12 +6,12 @@
 """
 import os
 import sys
-from setuptools import setup
+from setuptools import setup, find_packages
 from setuptools.command.install import install
 import subprocess
 
 # 要部署, 必须设置当前分支的git tag和VERSION一样.
-VERSION = "2.1.6"
+VERSION = "2.1.7"
 
 
 # 流程:
@@ -45,9 +45,10 @@ def get_git_latest_tag():
 
 
 def readme():
+    pass
     """读取README.md文件"""
-    with open('README.md', encoding="utf-8") as f:
-        return f.read()
+    # with open('README.md', encoding="utf-8") as f:
+    #     return f.read()
 
 
 class VerifyVersionCommand(install):
@@ -64,12 +65,12 @@ class VerifyVersionCommand(install):
 setup(
     name="SQLAlchemy_wrap",
     version=VERSION,
-    description="Python wrapper for the CircleCI API",
+    description="Python wrapper for usage directly",
     long_description=readme(),
     author="Jefung",
     author_email="865424525@qq.com",
     license="MIT",
-    url = "https://github.com/Jefung/SQLAlchemy_wrap",
+    url="https://github.com/Jefung/SQLAlchemy_wrap",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
@@ -81,11 +82,13 @@ setup(
         "Topic :: Internet",
         "Programming Language :: Python :: 3",
     ],
-    keywords='circleci ci cd api sdk',
-    packages=[],
+    keywords='alchemy pymysql',
     install_requires=[
-        'requests==2.18.4',
+        "sqlalchemy",
+        "pymysql"
     ],
+    packages=find_packages(exclude=['docs', 'tests', 'examples']),
+
     python_requires='>=3',
     cmdclass={
         'verify': VerifyVersionCommand,
